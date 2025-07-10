@@ -136,7 +136,7 @@ scene.add(modelGroup);
 
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth-19, window.innerHeight);
+    renderer.setSize(window.innerWidth-19, window.innerHeight); // G4 071025 Canvas Overflow Hack
     container.appendChild(renderer.domElement);
     
     // Setup EffectComposer and passes
