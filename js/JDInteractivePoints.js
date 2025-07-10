@@ -136,7 +136,7 @@ scene.add(modelGroup);
 
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth-19, window.innerHeight);
     container.appendChild(renderer.domElement);
     
     // Setup EffectComposer and passes
