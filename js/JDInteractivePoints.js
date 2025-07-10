@@ -26,7 +26,7 @@ let composer, renderPass, bloomPass;
 
 
 await initShaders();
-init();
+await init();
 
 async function initShaders() {
     fragmentshader = await (await fetch('shaders/shader.frag')).text();
@@ -69,66 +69,66 @@ async function init() {
     // let boxGeometry = new THREE.BoxGeometry( 200, 200, 200, 16, 16, 16 );
     //let boxGeometry = await getGLBGeometry();
 
-// Create a group to hold the mesh and particles together
-modelGroup = new THREE.Group();
+    // Create a group to hold the mesh and particles together
+    modelGroup = new THREE.Group();
 
-// Load native mesh (GLB)
-const nativeMesh = await loadGLBModel();
-modelGroup.add(nativeMesh); // Add the mesh to the group
+    // Load native mesh (GLB)
+    const nativeMesh = await loadGLBModel();
+    modelGroup.add(nativeMesh); // Add the mesh to the group
 
-// Load second mesh (GLB)
-const secondMesh = await loadSecondGLBModel();
-secondMesh.position.set(0, 0, 0); // optional: space it out
-secondMesh.scale.set(1, 1, 1); // Scale it slightly smaller
-modelGroup.add(secondMesh);
+    // Load second mesh (GLB)
+    const secondMesh = await loadSecondGLBModel();
+    secondMesh.position.set(0, 0, 0); // optional: space it out
+    secondMesh.scale.set(1, 1, 1); // Scale it slightly smaller
+    modelGroup.add(secondMesh);
 
-// Clone geometry for particles
-const particleGeometry = nativeMesh.geometry.clone();
-particleGeometry.deleteAttribute('normal');
-particleGeometry.deleteAttribute('uv');
-const boxGeometry = BufferGeometryUtils.mergeVertices(particleGeometry);
+    // Clone geometry for particles
+    const particleGeometry = nativeMesh.geometry.clone();
+    particleGeometry.deleteAttribute('normal');
+    particleGeometry.deleteAttribute('uv');
+    const boxGeometry = BufferGeometryUtils.mergeVertices(particleGeometry);
 
-// Use a consistent scale — apply it to the group
-modelGroup.scale.set(5, 5, 5);
+    // Use a consistent scale — apply it to the group
+    modelGroup.scale.set(5, 5, 5);
 
-// Build particle system
-const positionAttribute = boxGeometry.getAttribute('position');
+    // Build particle system
+    const positionAttribute = boxGeometry.getAttribute('position');
 
-const colors = [];
-const sizes = [];
+    const colors = [];
+    const sizes = [];
 
-const color = new THREE.Color();
-for (let i = 0, l = positionAttribute.count; i < l; i++) {
-    const lightness = Math.random(); // Random value between 0 (black) and 1 (white)
-    color.setHSL(0, 0, lightness);   // Grayscale using saturation = 0
-    color.toArray(colors, i * 3);
-    sizes[i] = PARTICLE_SIZE * 0.5;
-}
+    const color = new THREE.Color();
+    for (let i = 0, l = positionAttribute.count; i < l; i++) {
+        const lightness = Math.random(); // Random value between 0 (black) and 1 (white)
+        color.setHSL(0, 0, lightness);   // Grayscale using saturation = 0
+        color.toArray(colors, i * 3);
+        sizes[i] = PARTICLE_SIZE * 0.5;
+    }
 
-const geometry = new THREE.BufferGeometry();
-geometry.setAttribute('position', positionAttribute);
-geometry.setAttribute('customColor', new THREE.Float32BufferAttribute(colors, 3));
-geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', positionAttribute);
+    geometry.setAttribute('customColor', new THREE.Float32BufferAttribute(colors, 3));
+    geometry.setAttribute('size', new THREE.Float32BufferAttribute(sizes, 1));
 
-const material = new THREE.ShaderMaterial({
-    uniforms: {
-        color: { value: new THREE.Color(0xffffff) },
-        pointTexture: { value: new THREE.TextureLoader().load('textures/sprites/disc.png') },
-        alphaTest: { value: 0.9 },
-    
-        emissiveColor: { value: new THREE.Color(0xffffff) },   // example glow color
-        emissiveIntensity: { value: 0.5 }                      // adjust for glow strength
-    },
-    
-    vertexShader: vertexshader,
-    fragmentShader: fragmentshader
-});
+    const material = new THREE.ShaderMaterial({
+        uniforms: {
+            color: { value: new THREE.Color(0xffffff) },
+            pointTexture: { value: new THREE.TextureLoader().load('textures/sprites/disc.png') },
+            alphaTest: { value: 0.9 },
+        
+            emissiveColor: { value: new THREE.Color(0xffffff) },   // example glow color
+            emissiveIntensity: { value: 0.5 }                      // adjust for glow strength
+        },
+        
+        vertexShader: vertexshader,
+        fragmentShader: fragmentshader
+    });
 
-particles = new THREE.Points(geometry, material);
-modelGroup.add(particles);
+    particles = new THREE.Points(geometry, material);
+    modelGroup.add(particles);
 
-// Add group to scene
-scene.add(modelGroup);
+    // Add group to scene
+    scene.add(modelGroup);
 
 
 
