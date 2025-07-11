@@ -8,6 +8,10 @@ import { loadCurveFromJSON } from '../js/curveTools/CurveMethods.js'
 import { setupRenderer } from '../js/helpers/RendererHelper.js'
 import {IsMobile, IsTablet} from '../js/mobileCheck.js';
 
+// G4 Canvas Size Issue - Selectively remove About Page top DOM elements
+let rElems = [];
+rElems.forEach((e) => {document.getElementById(e).remove()});
+
 // G4 062925 Integrated
 // Force Window to reset to position (0,0) on reload
 window.addEventListener('load', (event) => {

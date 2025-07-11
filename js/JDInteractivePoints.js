@@ -7,6 +7,7 @@ import { RenderPass } from 'https://unpkg.com/three@0.150.1/examples/jsm/postpro
 import { UnrealBloomPass } from 'https://unpkg.com/three@0.150.1/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 
+let wC = -19; //G4 071025 Canvas Width Correction Factor (-19)
 
 let renderer, scene, camera;
 
@@ -136,7 +137,7 @@ async function init() {
 
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth-19, window.innerHeight); // G4 071025 Canvas Overflow Hack
+    renderer.setSize(window.innerWidth+wC, window.innerHeight); // G4 071025 Canvas Overflow Hack add wC (unknown Width Correction Facter)
     container.appendChild(renderer.domElement);
     
     // Setup EffectComposer and passes
