@@ -23,6 +23,7 @@
     </head>
 
 <body>
+    <div id="xHeader"> <!-- G4 071125 - Debug Width Issue -->
     <div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
     </div>
 
@@ -137,7 +138,7 @@
             </div>
         </div>
     </header>
-
+    </div> <!-- G4 071125 - Debug Width Issue -->
     
     
     
@@ -145,10 +146,12 @@
     
     <main class="main">
 
-        <div id="particle" class="" style="z-index: -3; position: absolute;"> </div>
+        <div id="particle" class="" style="z-index: -3; position: absolute;"> 
+        </div>
 
     <!-- G5 Added 053125  -->
-    <section class="section-about" style="padding-top: 3rem; height: 100vh; color: rgb(255, 255, 255); mix-blend-mode: exclusion;">
+    <!-- G4 061125 - Added id="designTree" -->
+    <section id="designTree" class="section-about" style="padding-top: 3rem; height: 100vh; color: rgb(255, 255, 255); mix-blend-mode: exclusion;">
 
         <div class="row d-flex" style="height: 100%;">
 
@@ -474,7 +477,8 @@
 
     </main>
 
-    <footer class="" style="margin-top: 0rem;">
+    <!-- G4 071125 - Added id="xFooter" for width Debug -->
+    <footer id="xFooter" class="" style="margin-top: 0rem;">
         <div class="footer-section">
             <div class="row justify-content-between">
                 <div class="col-2 ft"> <h1>+</h1> </div>

@@ -7,7 +7,7 @@ import { RenderPass } from 'https://unpkg.com/three@0.150.1/examples/jsm/postpro
 import { UnrealBloomPass } from 'https://unpkg.com/three@0.150.1/examples/jsm/postprocessing/UnrealBloomPass.js';
 
 
-let wC = -19; //G4 071025 Canvas Width Correction Factor (-19)
+let wC = -0; //G4 071025 Canvas Width Correction Factor (-16)
 
 let renderer, scene, camera;
 
@@ -37,6 +37,9 @@ async function initShaders() {
 async function init() {
 
     const container = document.getElementById( 'particle' );
+
+    console.log("Particle - GrabDOM: Windows.innerWidth = "+window.innerWidth); //G4 071125 - Debug About Width Issue
+    console.log('Particle - GrabDOM: particle.offsetWidth = '+document.getElementById("particle").offsetWidth);
 
     scene = new THREE.Scene();
 
@@ -138,7 +141,11 @@ async function init() {
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth+wC, window.innerHeight); // G4 071025 Canvas Overflow Hack add wC (unknown Width Correction Facter)
+    console.log("Particle - Before Add to DOM: Windows.innerWidth = "+window.innerWidth); //G4 071125 - Debug About Width Issue
+     console.log('Particle - Before Add to DOM: particle.offsetWidth = '+document.getElementById("particle").offsetWidth);
     container.appendChild(renderer.domElement);
+    console.log("Particle - After Add to DOM: Windows.innerWidth = "+window.innerWidth); //G4 071125 - Debug About Width Issue
+     console.log('Particle - After Add to DOM: particle.offsetWidth = '+document.getElementById("particle").offsetWidth);
     
     // Setup EffectComposer and passes
     composer = new EffectComposer(renderer);
@@ -179,6 +186,9 @@ function onPointerMove( event ) {
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
+    
+    console.log("Particle - On Window Resize: Windows.innerWidth = "+window.innerWidth); //G4 071125 - Debug About Width Issue
+     console.log('Particle - On Window Resize: particle.offsetWidth = '+document.getElementById("particle").offsetWidth);
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     composer.setSize(window.innerWidth, window.innerHeight);  // Add this line

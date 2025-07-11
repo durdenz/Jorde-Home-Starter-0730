@@ -8,9 +8,16 @@ import { loadCurveFromJSON } from '../js/curveTools/CurveMethods.js'
 import { setupRenderer } from '../js/helpers/RendererHelper.js'
 import {IsMobile, IsTablet} from '../js/mobileCheck.js';
 
-// G4 Canvas Size Issue - Selectively remove About Page top DOM elements
+// G4 071125 - Canvas Size Issue - Selectively remove About Page top DOM elements
 let rElems = [];
 rElems.forEach((e) => {document.getElementById(e).remove()});
+
+console.log('Startup: window.innerWidth = '+window.innerWidth);
+console.log('Startup: particle.offsetWidth = '+document.getElementById("particle").offsetWidth);
+console.log('Startup: xHeader.offsetWidth = '+document.getElementById("xHeader").offsetWidth);
+console.log('Startup: designTree.offsetWidth = '+document.getElementById("designTree").offsetWidth);
+console.log('Startup: xFooter.offsetWidth = '+document.getElementById("xFooter").offsetWidth);
+
 
 // G4 062925 Integrated
 // Force Window to reset to position (0,0) on reload
@@ -55,200 +62,200 @@ function menuToggle() {
 
 
 
+// G4 071125 - Debug About Size Issue
+// //GSAP and SplitType
 
-//GSAP and SplitType
+// const isAnimationOk = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
 
-const isAnimationOk = window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+// // Change to false to make the animations play when the section's in viewport
+// const scrub = true;
+// document.addEventListener("DOMContentLoaded", (event) => {
+//   gsap.registerPlugin(ScrollTrigger)
 
-// Change to false to make the animations play when the section's in viewport
-const scrub = true;
-document.addEventListener("DOMContentLoaded", (event) => {
-  gsap.registerPlugin(ScrollTrigger)
+//   if(isAnimationOk) {
+//     setupAnimations();
+// }})
 
-  if(isAnimationOk) {
-    setupAnimations();
-}})
+// function setupAnimations() {
 
-function setupAnimations() {
+// const splitTypes = document.querySelectorAll('.reveal-type')
 
-const splitTypes = document.querySelectorAll('.reveal-type')
+// splitTypes.forEach((char,i) => {
 
-splitTypes.forEach((char,i) => {
+//     const text = new SplitType(char,{ types: 'words, chars'})
 
-    const text = new SplitType(char,{ types: 'words, chars'})
+//     gsap.from(text.words, {
+//        scrollTrigger: {
+//            trigger: char,
+//            start: 'bottom 90%',
+//            end: 'bottom 85%',
+//            scrub: false,
+//            markers: false,
+//            toggleActions: 'play play reverse reverse'
+//        },
+//        stagger: 0.05,
+//        opacity: 0,
+//        y:90,
+//        transformOrigin: 'bottom',
+//        duration: 0.3,
+//     })
+// })
 
-    gsap.from(text.words, {
-       scrollTrigger: {
-           trigger: char,
-           start: 'bottom 90%',
-           end: 'bottom 85%',
-           scrub: false,
-           markers: false,
-           toggleActions: 'play play reverse reverse'
-       },
-       stagger: 0.05,
-       opacity: 0,
-       y:90,
-       transformOrigin: 'bottom',
-       duration: 0.3,
-    })
-})
+// // G4 071025 CleanUp for About Page
+// // gsap.from(".line", {
+// //   scrollTrigger: {
+// //       trigger: ".line",
+// //       start: 'bottom 90%',
+// //       end: 'bottom 85%',
+// //       scrub: false,
+// //       markers: false,
+// //       toggleActions: 'play play reverse reverse'
+// //   },
+// //   stagger: 0.05,
+// //   opacity: 0,
+// //   scaleX: 0,
+// //   x:-90,
+// //   transformOrigin: 'left',
+// //   duration: 0.3,
+// // })
 
-// G4 071025 CleanUp for About Page
-// gsap.from(".line", {
-//   scrollTrigger: {
-//       trigger: ".line",
+// // G4 071025 CleanUp for About Page
+// // gsap.from(".text-block-animate", {
+// //   scrollTrigger: {
+// //       trigger: ".line",
+// //       start: 'bottom 90%',
+// //       end: 'bottom 85%',
+// //       scrub: false,
+// //       markers: false,
+// //       toggleActions: 'play play reverse reverse'
+// //   },
+// //   stagger: 0.05,
+// //   opacity: 0,
+// //   y:-90,
+// //   transformOrigin: 'left',
+// //   duration: 0.3,
+// // })
+
+// // G4 071025 CleanUp for About Page
+// // gsap.from(".case-study-animate", {
+// //   scrollTrigger: {
+// //       trigger: ".case-study-animate",
+// //       start: 'bottom 90%',
+// //       end: 'bottom 85%',
+// //       scrub: false,
+// //       markers: false,
+// //       toggleActions: 'play play reverse reverse'
+// //   },
+// //   stagger: 0.05,
+// //   opacity: 0,
+// //   y: 200,
+// //   scale: 0,
+// //   rotate: -45,
+// //   transformOrigin: 'center right',
+// //   duration: 0.3,
+// // })
+
+
+// var sections = gsap.utils.toArray('.case-study-animate2');
+
+// sections.forEach((section) => {
+//   gsap.from(section, {
+//     scrollTrigger: {
+//       trigger: section,
 //       start: 'bottom 90%',
 //       end: 'bottom 85%',
 //       scrub: false,
 //       markers: false,
 //       toggleActions: 'play play reverse reverse'
-//   },
-//   stagger: 0.05,
-//   opacity: 0,
-//   scaleX: 0,
-//   x:-90,
-//   transformOrigin: 'left',
-//   duration: 0.3,
+//     },
+//     opacity: 0,
+//     y: 200,
+//     scale: 0,
+//     rotate: 25,
+//     transformOrigin: '40% 40%',
+//     duration: 0.4,
+//   });
+// });
+
+
+// }
+
+// const splitTypes = document.querySelectorAll('.reveal-type2')
+
+// splitTypes.forEach((char,i) => {
+
+//     const text = new SplitType(char,{ types: 'words, chars'})
+
+//     gsap.from(text.words, {
+//        stagger: 0.05,
+//        opacity: 0,
+//        y:-90,
+//        transformOrigin: 'top',
+//        duration: 0.2,
+//        delay: 0.3,
+//     })
+
+//     gsap.to(text.chars, {
+//       scrollTrigger: {
+//         trigger: ".reveal-type2",
+//           start: 'top 30%',
+//           end: 'top 20%',
+//           scrub: false,
+//           markers: false,
+//           toggleActions: 'play play reverse reverse'
+//       },
+//       stagger: 0.02,
+//       opacity: 0,
+//       y:90,
+//       transformOrigin: 'bottom',
+//       duration: 0.2,
+//    })
+
+
+// const splitTypes = document.querySelectorAll('.reveal-type3')
+
+// splitTypes.forEach((char,i) => {
+
+//     const text = new SplitType(char,{ types: 'words, chars'})
+
+//     gsap.from(text.words, {
+//        scrollTrigger: {
+//            trigger: char,
+//            start: 'bottom 50%',
+//            end: '+=100%',
+//            scrub: false,
+//            pin: true,
+//            markers: false,
+//            ease: "back.inOut(1.7)",
+//            toggleActions: 'play play play reverse'
+//        },
+//        stagger: 0.05,
+//        opacity: 0,
+//        x:90,
+//        transformOrigin: 'bottom',
+//        duration: 0.3,
+//     })
+
+//     gsap.to(text.chars, {
+//       scrollTrigger: {
+//           trigger: char,
+//           start: 'top 35%',
+//           end: 'top 35%',
+//           scrub: false,
+//           markers: false,
+//           ease: "back.inOut(1.7)",
+//           toggleActions: 'play play reverse reverse'
+//       },
+//       stagger: 0.05,
+//       opacity: 0,
+//       x:90,
+//       transformOrigin: 'bottom',
+//       duration: 0.3,
+//    })
+
 // })
 
-// G4 071025 CleanUp for About Page
-// gsap.from(".text-block-animate", {
-//   scrollTrigger: {
-//       trigger: ".line",
-//       start: 'bottom 90%',
-//       end: 'bottom 85%',
-//       scrub: false,
-//       markers: false,
-//       toggleActions: 'play play reverse reverse'
-//   },
-//   stagger: 0.05,
-//   opacity: 0,
-//   y:-90,
-//   transformOrigin: 'left',
-//   duration: 0.3,
 // })
-
-// G4 071025 CleanUp for About Page
-// gsap.from(".case-study-animate", {
-//   scrollTrigger: {
-//       trigger: ".case-study-animate",
-//       start: 'bottom 90%',
-//       end: 'bottom 85%',
-//       scrub: false,
-//       markers: false,
-//       toggleActions: 'play play reverse reverse'
-//   },
-//   stagger: 0.05,
-//   opacity: 0,
-//   y: 200,
-//   scale: 0,
-//   rotate: -45,
-//   transformOrigin: 'center right',
-//   duration: 0.3,
-// })
-
-
-var sections = gsap.utils.toArray('.case-study-animate2');
-
-sections.forEach((section) => {
-  gsap.from(section, {
-    scrollTrigger: {
-      trigger: section,
-      start: 'bottom 90%',
-      end: 'bottom 85%',
-      scrub: false,
-      markers: false,
-      toggleActions: 'play play reverse reverse'
-    },
-    opacity: 0,
-    y: 200,
-    scale: 0,
-    rotate: 25,
-    transformOrigin: '40% 40%',
-    duration: 0.4,
-  });
-});
-
-
-}
-
-const splitTypes = document.querySelectorAll('.reveal-type2')
-
-splitTypes.forEach((char,i) => {
-
-    const text = new SplitType(char,{ types: 'words, chars'})
-
-    gsap.from(text.words, {
-       stagger: 0.05,
-       opacity: 0,
-       y:-90,
-       transformOrigin: 'top',
-       duration: 0.2,
-       delay: 0.3,
-    })
-
-    gsap.to(text.chars, {
-      scrollTrigger: {
-        trigger: ".reveal-type2",
-          start: 'top 30%',
-          end: 'top 20%',
-          scrub: false,
-          markers: false,
-          toggleActions: 'play play reverse reverse'
-      },
-      stagger: 0.02,
-      opacity: 0,
-      y:90,
-      transformOrigin: 'bottom',
-      duration: 0.2,
-   })
-
-
-const splitTypes = document.querySelectorAll('.reveal-type3')
-
-splitTypes.forEach((char,i) => {
-
-    const text = new SplitType(char,{ types: 'words, chars'})
-
-    gsap.from(text.words, {
-       scrollTrigger: {
-           trigger: char,
-           start: 'bottom 50%',
-           end: '+=100%',
-           scrub: false,
-           pin: true,
-           markers: false,
-           ease: "back.inOut(1.7)",
-           toggleActions: 'play play play reverse'
-       },
-       stagger: 0.05,
-       opacity: 0,
-       x:90,
-       transformOrigin: 'bottom',
-       duration: 0.3,
-    })
-
-    gsap.to(text.chars, {
-      scrollTrigger: {
-          trigger: char,
-          start: 'top 35%',
-          end: 'top 35%',
-          scrub: false,
-          markers: false,
-          ease: "back.inOut(1.7)",
-          toggleActions: 'play play reverse reverse'
-      },
-      stagger: 0.05,
-      opacity: 0,
-      x:90,
-      transformOrigin: 'bottom',
-      duration: 0.3,
-   })
-
-})
-
-})
 
 // G4 071025 CleanUp for About Page
 // gsap.from(".keyhole", {
