@@ -111,7 +111,7 @@ gsap.from(".line", {
 
 gsap.from(".text-block-animate", {
   scrollTrigger: {
-      trigger: ".line",
+      trigger: ".reveal-type",
       start: 'bottom 90%',
       end: 'bottom 85%',
       scrub: false,
@@ -200,63 +200,91 @@ splitTypes.forEach((char,i) => {
       transformOrigin: 'bottom',
       duration: 0.2,
    })
+   
+   
+   
 
+})
 
-const splitTypes = document.querySelectorAll('.reveal-type3')
+gsap.registerPlugin(ScrollTrigger);
 
-splitTypes.forEach((char,i) => {
+// Wait for DOM load
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".reveal-type3").forEach((el) => {
+    // Split text into characters
+    const split = new SplitType(el, { types: "words, chars" });
 
-    const text = new SplitType(char,{ types: 'words, chars'})
+    // Create a wrapper to preserve layout during pinning
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("reveal-wrapper");
 
-    gsap.from(text.words, {
-       scrollTrigger: {
-           trigger: char,
-           start: 'bottom 50%',
-           end: '+=100%',
-           scrub: false,
-           pin: true,
-           markers: false,
-           ease: "back.inOut(1.7)",
-           toggleActions: 'play play play reverse'
-       },
-       stagger: 0.05,
-       opacity: 0,
-       x:90,
-       transformOrigin: 'bottom',
-       duration: 0.3,
-    })
+    // Measure height and add padding for animation (in/out movement)
+    const elHeight = el.offsetHeight;
+    const padding = 120; // Extra height for animation movement
+    wrapper.style.height = `${elHeight + padding}px`;
+    wrapper.style.position = "relative";
+    wrapper.style.overflow = "visible";
 
-    gsap.to(text.chars, {
+    // Insert wrapper around element
+    el.parentNode.insertBefore(wrapper, el);
+    wrapper.appendChild(el);
+
+    // Style target element for positioning (use relative instead of absolute)
+    Object.assign(el.style, {
+      position: "relative",      // ⬅️ Prevents layout jump and disappearance
+      top: "0",
+      left: "0",
+      width: "100%",
+      zIndex: "1",
+      textAlign: "center",
+    });
+
+    // ScrollTrigger Timeline
+    const tl = gsap.timeline({
       scrollTrigger: {
-          trigger: char,
-          start: 'top 35%',
-          end: 'top 35%',
-          scrub: false,
-          markers: false,
-          ease: "back.inOut(1.7)",
-          toggleActions: 'play play reverse reverse'
-      },
-      stagger: 0.05,
+        trigger: wrapper,
+        start: "top center",
+        end: "+=500",
+        scrub: true,
+        pin: true,
+        // toggleActions: 'play play reverse reverse', // for non scrub based
+        pinSpacing: false,   // ⛔ prevent extra space from being added
+        markers: true        // ✅ for debugging; disable in production
+      }
+    });
+
+    // Animate in
+    tl.from(split.chars, {
       opacity: 0,
-      x:90,
-      transformOrigin: 'bottom',
-      duration: 0.3,
-   })
+      y: 60,
+      stagger: 0.04,
+      duration: 0.4,
+      ease: "power2.out"
+    });
 
-})
+    // Animate out
+    tl.to(split.chars, {
+      opacity: 0,
+      y: -60,
+      stagger: 0.04,
+      duration: 0.4,
+      ease: "power2.in"
+    });
+  });
+});
 
-})
+
 
 // GD5 Added handleWindowResize and Event Listener 053125 
 //
   gsap.from(".keyhole", {
-    "clip-path": "polygon(0% 0%, 0% 100%, 49% 100%, 49% 25%, 49% 25%, 49% 75%, 49% 75%, 49% 100%, 100% 100%, 100% 0%)",
+    "clip-path": "polygon(0% 0%, 0% 100%, 50% 100%, 50% 25%, 50% 25%, 50% 75%, 50% 75%, 50% 100%, 100% 100%, 100% 0%)",    
     scrollTrigger: {
       trigger: ".section5",
-      start: "1% 10%", // when the top of the trigger hits the top of the viewport
+      start: "7% 10%", // when the top of the trigger hits the top of the viewport
       end: "10% 0%", // bottom of the trigger hits the bottom of the vp
-      scrub: scrub,
-      markers: false,
+      scrub: true,
+      markers: true,
       toggleActions: 'play play reverse reverse'
     },
   })
@@ -287,7 +315,7 @@ async function setupScene() {
 	const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 	// camera.position.set(6, 3, 10);
 	camera.position.copy(curvePath.curve.getPointAt(0))
-	camera.lookAt(curvePath.curve.getPointAt(0.99))
+	camera.lookAt(curvePath.curve.getPointAt(1.0))
 
 	// Add the camera to the scene
 	scene.add(camera);
@@ -304,7 +332,7 @@ async function setupScene() {
 
 	function onMouseScroll(event){
 		if(SplineCanvas.getBoundingClientRect().top <= 0) {
-			// console.log(`MouseScroll: SplineCanvas.top = ${SplineCanvas.getBoundingClientRect().top}`);
+			console.log(`MouseScroll: SplineCanvas.top = ${SplineCanvas.getBoundingClientRect().top}`);
 			handleScroll(event, positionAlongPathState);
 		}
 	}
@@ -422,7 +450,7 @@ btn1canvas.addEventListener("mouseleave", Btn1Exit);
 document.addEventListener("DOMContentLoaded", () => {
   const header = document.getElementById("spline-path-canvas");
   const s4 = document.getElementById("section4");
-  // const scrollThreshold = 2800; // px
+  const scrollThreshold = 2800; // px
 
   // GD4 Commented out the folloeing code and added new code below 052825
   //     Also added const s4 above to grab bottom of Section4 
@@ -716,14 +744,19 @@ const elements = document.querySelectorAll(".hoverText1");
 elements.forEach((element) => {
   const arrow = element.querySelector("span.case-title");
   const title = element.querySelector("h1.case-title");
+  const parentEl = document.querySelector("#cs-card-hover"); // Get the target element
 
-  let hoverTween; // We'll recreate this on init + resize
+  let hoverTween;
 
   const createHoverTween = () => {
-    // Kill existing timeline if it exists
     if (hoverTween) hoverTween.kill();
 
-    const offset = () => Math.min(Math.max(window.innerWidth * 0.03, 30), 600);
+    // Use the width of #cs-card-hover instead of window.innerWidth
+    const offset = () => {
+      if (!parentEl) return 35; // Fallback if the element is not found
+      const width = parentEl.offsetWidth;
+      return Math.min(Math.max(width * 0.07, 2), 600);
+    };
 
     hoverTween = gsap.timeline({ paused: true })
       .fromTo(
@@ -739,18 +772,204 @@ elements.forEach((element) => {
       );
   };
 
-  // Initial creation
   createHoverTween();
 
-  // Rebuild on resize (debounced for performance)
   let resizeTimeout;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
       createHoverTween();
-    }, 150); // Wait 150ms after resize ends
+    }, 150);
   });
 
   element.addEventListener("mouseenter", () => hoverTween.play());
   element.addEventListener("mouseleave", () => hoverTween.reverse());
 });
+
+
+
+//Video Player Controls//
+const video = document.getElementById("myPreviewVideo");
+const playButton = document.getElementById("playButton");
+const muteButton = document.getElementById("muteButton");
+const muteIcon = document.getElementById("muteIcon");
+const videoOverlay = document.getElementById("videoOverlay");
+const volumeSlider = document.getElementById("volumeSlider");
+
+// Play video
+playButton.addEventListener("click", () => {
+  if (video.paused || video.ended) {
+    if (video.ended) {
+      video.currentTime = 0; // Restart if finished
+    }
+    video.play();
+    videoOverlay.style.opacity = 0;
+    playButton.style.display = "none";
+  } else {
+    video.pause();
+    playButton.style.display = "block";
+    videoOverlay.style.opacity = 1;
+  }
+  updateVolumeSliderVisibility();
+});
+
+video.addEventListener("click", () => {
+  if (video.paused) {
+    video.play();
+    playButton.style.display = "none";
+    videoOverlay.style.opacity = 0;
+  } else {
+    video.pause();
+    playButton.style.display = "block";
+    videoOverlay.style.opacity = 1;
+  }
+});
+
+
+// Replay logic
+video.addEventListener("ended", () => {
+  playButton.style.display = "block";
+  videoOverlay.style.opacity = 1;
+});
+
+// Mute/unmute toggle
+muteButton.addEventListener("click", () => {
+  video.muted = !video.muted;
+  muteIcon.src = video.muted ? "Images/VolumeMute2.svg" : "Images/Volume2.svg";
+  updateVolumeSliderVisibility();
+});
+
+// Volume control
+function updateVolumeSliderStyle() {
+  const val = volumeSlider.value;
+  const percent = val * 100;
+  volumeSlider.style.background = `linear-gradient(to right, limegreen 0%, limegreen ${percent}%, #ccc ${percent}%, #ccc 100%)`;
+}
+
+volumeSlider.addEventListener("input", () => {
+  video.volume = volumeSlider.value;
+  video.muted = volumeSlider.value === "0";
+  muteIcon.src = video.muted ? "Images/VolumeMute2.svg" : "Images/Volume2.svg";
+  updateVolumeSliderVisibility();
+  updateVolumeSliderStyle();
+});
+
+window.addEventListener("load", () => {
+  muteIcon.src = video.muted ? "Images/VolumeMute2.svg" : "Images/Volume2.svg";
+  updateVolumeSliderVisibility();
+  updateVolumeSliderStyle(); // Set initial color
+});
+
+
+// Update visibility class on slider
+function updateVolumeSliderVisibility() {
+  if (!video.muted) {
+    volumeSlider.classList.add("show");
+  } else {
+    volumeSlider.classList.remove("show");
+  }
+}
+
+// Initial setup
+window.addEventListener("load", () => {
+  muteIcon.src = video.muted ? "Images/VolumeMute2.svg" : "Images/Volume2.svg";
+  updateVolumeSliderVisibility();
+});
+
+
+// Video Scroll in GSAP animation
+
+gsap.registerPlugin(ScrollTrigger);
+
+gsap.timeline({
+  scrollTrigger: {
+    trigger: ".video-animate",
+    start: "top 80%",
+    end: "bottom 20%",
+    toggleActions: "play play none reverse",
+    markers: false
+  }
+})
+.from(".video-animate", {
+  opacity: 0,
+  y: -10,
+  duration: 0.8,
+  ease: "power3.out",
+  stagger: 0.2
+});
+
+
+// GSAP Home Text Overlay Spline Scroll Section
+
+gsap.registerPlugin(ScrollTrigger);
+
+// Split each line into characters
+const lines = document.querySelectorAll(".section5-line");
+lines.forEach(line => new SplitType(line, { types: "chars" }));
+
+const tl = gsap.timeline({
+  scrollTrigger: {
+    trigger: ".section5-text-overlay",
+    start: "top top",
+    end: "+=30%",
+    scrub: true,
+    toggleActions: "play play none reverse",
+    pin: true,
+    markers: true
+  }
+});
+
+// Animate in the highlight line
+tl.from(".section5-highlight-line", {
+  opacity: 1,
+  duration: 2,
+});
+
+// Animate in each line's characters (fade and rise)
+lines.forEach((line, index) => {
+  const chars = line.querySelectorAll(".char");
+
+  tl.fromTo(chars, {
+    opacity: 0,
+    y: 600,
+  }, {
+    opacity: 1,
+    y: -10,
+    duration: 1,
+    stagger: 0.04,
+    ease: "power2.out"
+  }, "<+=0.3");
+});
+
+// Pause before animating out
+tl.to({}, { duration: 1.5 });
+
+// Animate out the lines
+tl.to(".section5-line-1", {
+  y: -500,
+  opacity: 0,
+  duration: 1,
+  ease: "power1.inOut"
+});
+
+tl.to(".section5-line-2", {
+  opacity: 0,
+  duration: 1,
+  ease: "power1.inOut"
+}, "<");
+
+tl.to(".section5-line-3", {
+  y: 500,
+  opacity: 0,
+  duration: 1,
+  ease: "power1.inOut"
+}, "<");
+
+// Animate out the highlight line
+tl.to(".section5-highlight-line", {
+  opacity: 0,
+  duration: 1
+}, "<");
+
+
+
