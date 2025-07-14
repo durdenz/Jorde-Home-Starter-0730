@@ -12,11 +12,11 @@ import {IsMobile, IsTablet} from '../js/mobileCheck.js';
 let rElems = [];
 rElems.forEach((e) => {document.getElementById(e).remove()});
 
-console.log('Startup: window.innerWidth = '+window.innerWidth);
-console.log('Startup: particle.offsetWidth = '+document.getElementById("particle").offsetWidth);
-console.log('Startup: xHeader.offsetWidth = '+document.getElementById("xHeader").offsetWidth);
-console.log('Startup: designTree.offsetWidth = '+document.getElementById("designTree").offsetWidth);
-console.log('Startup: xFooter.offsetWidth = '+document.getElementById("xFooter").offsetWidth);
+// console.log('Startup: window.innerWidth = '+window.innerWidth);
+// console.log('Startup: particle.offsetWidth = '+document.getElementById("particle").offsetWidth);
+// console.log('Startup: xHeader.offsetWidth = '+document.getElementById("xHeader").offsetWidth);
+// console.log('Startup: designTree.offsetWidth = '+document.getElementById("designTree").offsetWidth);
+// console.log('Startup: xFooter.offsetWidth = '+document.getElementById("xFooter").offsetWidth);
 
 
 // G4 062925 Integrated
@@ -462,27 +462,28 @@ btn1canvas.addEventListener("mouseleave", Btn1Exit);
 // });
 
 
-
+// G4 071425 - CleanUp - Remove Unused Functions not used by about.html
+// 
 // // Case Study Year Update on Scroll
 // // ==============================================
 
-document.addEventListener("DOMContentLoaded", () => {
-  const yearSpan = document.getElementById("activeYear");
-  const sections = document.querySelectorAll(".year-section");
+// document.addEventListener("DOMContentLoaded", () => {
+//   const yearSpan = document.getElementById("activeYear");
+//   const sections = document.querySelectorAll(".year-section");
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const year = entry.target.dataset.year;
-        yearSpan.textContent = year;
-      }
-    });
-  }, {
-    threshold: 0.1 // Adjust as needed (0.1 means 10% of the section is visible)
-  });
+//   const observer = new IntersectionObserver((entries) => {
+//     entries.forEach(entry => {
+//       if (entry.isIntersecting) {
+//         const year = entry.target.dataset.year;
+//         yearSpan.textContent = year;
+//       }
+//     });
+//   }, {
+//     threshold: 0.1 // Adjust as needed (0.1 means 10% of the section is visible)
+//   });
 
-  sections.forEach(section => observer.observe(section));
-});
+//   sections.forEach(section => observer.observe(section));
+// });
 
 
 // G4 Added 052825
