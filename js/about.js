@@ -551,7 +551,11 @@ document.querySelectorAll('.scramble-hover').forEach(element =>
 // G5 Added 053125
 // ---- Pixelation Overlay on Hover
 // 
-  document.addEventListener('DOMContentLoaded', function () {
+  document.addEventListener('DOMContentLoaded', initGsap); // G4 071425 Init on DOM Loaded
+  window.addEventListener('resize', () => {window.location.reload(true)}); // G4 071425 Re-Init on Resize
+    
+  function initGsap() {
+    console.log('initGsap'); //G4 071425 Debug
     const animationStepDuration = 0.3; // Adjust this value to control the timing
     const gridSize = 17; // Number of pixels per row and column (adjustable)
     // Calculate pixel size dynamically
@@ -640,7 +644,7 @@ document.querySelectorAll('.scramble-hover').forEach(element =>
         });
       }
     });
-  });
+  };
 
 
 
