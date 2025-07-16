@@ -14,6 +14,11 @@
 }
 
 
+mark {
+  color: rgb(0, 0, 0);
+  background: lawngreen;
+}
+
 /* Fonts */
 @font-face {
   font-family: 'Helvectica';
@@ -495,6 +500,11 @@ letter-spacing: -5px;
 
 }
 
+.section4 {
+  padding-left: 50px;
+  padding-right: 50px;
+ }
+
 
 .section5 {
   width: 100%;
@@ -518,7 +528,7 @@ letter-spacing: -5px;
 }
 
 .fill-div {
-  background: lawngreen;
+  background: rgb(0, 0, 0);
   overflow: hidden;
 }
 
@@ -576,14 +586,15 @@ letter-spacing: -5px;
 .case-title {
   text-align: left;
   font-size: 3vw;
-  letter-spacing: -.2rem;
+  letter-spacing: -.29rem;
   text-transform: uppercase;
-  margin-top: -0.5rem;
+  margin-top: 0px;
   margin-bottom: 0px;
   margin-left: 0px;
   text-overflow: ellipsis;
   color: rgb(0, 0, 0);
   font-weight: 700;
+  cursor: pointer;
 }
 
 
@@ -596,22 +607,24 @@ letter-spacing: -5px;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
+  margin-left: 1.5rem;
   position: fixed;
+  bottom: 0;
+  z-index: 1;
 }
 
 .tag-button {
   padding: 0.5em 1em;
-  background: rgb(0, 0, 0);
-  border: 1px solid rgba(255, 255, 255, 0);
+  background: rgba(0, 0, 0, 0);
+  border: 1px solid rgb(0, 0, 0);
   cursor: pointer;
   font-size: 0.9rem;
-  border: 0px;
 }
 
 .tag-button.active {
   background-color: lawngreen;
   color: rgb(0, 0, 0);
-  border: 1px solid rgba(255, 255, 255, 0);}
+  border: 1px solid rgba(0, 0, 0, 0);}
 
 .tags {
   text-align: left;
@@ -624,13 +637,13 @@ letter-spacing: -5px;
   font-family:'Roboto Mono', 'Arial Narrow', Arial, sans-serif;
   font-weight: 400;
   text-decoration: none;
-  padding-right: 10px;
-  margin-top: .1rem;
+  padding-right: 7px;
+  margin-top: .01rem;
   color: rgb(0, 0, 0);
 }
 
 .tags:hover {
-  color:#73AD21;
+  color:lawngreen;
 }
 
 .csdate {
@@ -643,6 +656,7 @@ letter-spacing: -5px;
   font-family:'Roboto Mono', 'Arial Narrow', Arial, sans-serif;
   font-weight: 400;
   margin-top: 14px;
+  margin-bottom: 0px;
   width: 100%;
 }
 
@@ -664,6 +678,7 @@ letter-spacing: -5px;
 .hoverText1 {
   width: 100%;
   position: relative;
+  cursor: pointer;
 }
 
 @keyframes fadeIn {
@@ -675,6 +690,7 @@ letter-spacing: -5px;
 .tags a {
   display:inline-block;
   text-align: left;
+  cursor: pointer;
 }
 
 a {
@@ -713,10 +729,12 @@ a {
   position: fixed;
   left: 0;
   top: 48%;
-  scale: 8;
+  scale: 6;
   rotate: 90deg;
-  margin-left: 100px;
+  margin-left: 40px;
   z-index: -1;
+  /* font-family:'Roboto Mono', 'Arial Narrow', Arial, sans-serif;
+  font-weight: 400; */
 }
 
 .plus-mark {
@@ -1152,9 +1170,11 @@ font-weight: 200;
 .year-section {
   /* height: 100vh; */
   padding: 5px;
-  border-bottom: 2px solid #ccc;
+  border-bottom: 1px solid rgb(0, 0, 0);
   font-size: 2rem;
   transition-duration: 20ms;
+  /* margin-top: -200px;  */
+  padding-top: 120px;
 }
 
 .gallery {
@@ -1254,6 +1274,7 @@ font-weight: 200;
   height: 0;
   margin: 0;
   overflow: hidden;
+  display: none;
 }
 
 .pixelated-image-card {
@@ -1261,7 +1282,7 @@ font-weight: 200;
   color: rgb(124, 252, 0);
   border-radius: 1em;
   width: 100%;
-
+  cursor: pointer;
   max-width: 100%;
   position: relative;
   overflow: hidden;
@@ -1351,6 +1372,37 @@ font-weight: 200;
   opacity: 1;
 }
 
+/* CASE STUDIES PAGE CSS */
+
+#head-style {
+  font-size: 9vi;
+  line-height: 100%;
+  color: rgb(0, 0, 0);
+  letter-spacing: -0.9vi;
+  margin-top: .6vi;
+  margin-right: 1.5vi;
+  text-align: right;
+}
+
+#head-num {
+  font-size: 3.8vi;
+  font-family:'Roboto Mono', 'Arial Narrow', Arial, sans-serif;
+  color: rgb(0, 0, 0);
+}
+
+#head-arrow {
+  font-size: 5.5vi;
+  margin-top: -3.5vi;
+  font-family:'Roboto Mono', 'Arial Narrow', Arial, sans-serif;
+  color: rgb(0, 0, 0);
+}
+
+.case-study-header {
+  scale: 1.15; 
+  margin-top: 100px;
+  margin-right: 3%;
+}
+
 
 
 
@@ -1364,6 +1416,7 @@ font-weight: 200;
   .large-text {
     font-size: 14vw;
     line-height: 13vw;
+    letter-spacing: -.25rem;
   }
 
   .case-study-card-2 {
@@ -1485,7 +1538,7 @@ font-weight: 200;
   position: fixed;
   left: 0;
   top: 48%;
-  scale: 9.5;
+  scale: 0;
   rotate: 90deg;
   margin-left: 14vw;
 }
@@ -1509,25 +1562,25 @@ font-weight: 200;
 
 .case-title {
   font-size: 6vw;
-  margin-top: -5px;
-  margin-left: 2px;
-  letter-spacing: -.06em;
+  margin-top: 0px;
+  margin-left: 0px;
+  letter-spacing: -.08em;
 }
 
 
 .tags {
-  font-size: 3vw;
+  font-size: 2.5vw;
   overflow: hidden;
-  padding-right: 10px;
-  margin-top: 3px;
+  padding-right: 0px;
+  margin-top: 0px;
 }
 
 .csdate {
   font-size: 3vw;
-  line-height: auto;
   font-weight: 400;
   margin-top: 14px;
   text-align: left;
+  margin-bottom: 2px;
 }
 
 .vertical-line {
@@ -1584,6 +1637,11 @@ font-weight: 200;
   overflow: clip;
 }
 
+.section4 {
+  padding-left: 5px;
+  padding-right: 5px;
+ }
+
 .section5-line {
   font-size: 14vw;
   line-height: 1.2;
@@ -1618,6 +1676,23 @@ font-weight: 200;
   align-self: center;
   opacity: 1;
 }
+
+#tag-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0rem;
+  margin-left: 0rem;
+  position: absolute;
+  bottom: 75vh;
+  justify-self: center;
+}
+
+  .case-study-header {
+    scale: 1.37; 
+    margin-top: 30px;
+    margin-right: 10%;
+  }
 
 }
 
@@ -1688,7 +1763,7 @@ font-weight: 200;
     position: fixed;
     left: 0;
     top: 48%;
-    scale: 6;
+    scale: 0;
     rotate: 90deg;
     margin-left: 35px;
   }
@@ -1715,14 +1790,68 @@ font-weight: 200;
   }
 
   .case-title {
-    margin-top: -1px;
+    margin-top: 0px;
     letter-spacing: -.05em;
     font-size: 6vw;
+  }
+
+  .csdate {
+    font-size: 2vw;
+    margin-bottom: 2px;
+  }
+
+  .tags {
+    text-align: left;
+    font-size: 2vw;
+    margin-top: 0px;
   }
 
   #myPreviewVideo {
     height: 100%; 
     transform: scale(1.095) translateY(0px);
+  }
+
+/* CASE STUDIES PAGE CSS */
+
+  #head-style {
+    font-size: 10vi;
+    line-height: 100%;
+    letter-spacing: -.9vi;
+    text-align: right;
+    margin-top: .6vi;
+    margin-right: 1.5vi;
+  }
+
+  #head-num {
+    font-size: 3.8vi;
+    margin-top: 5%;
+  }
+
+  #head-arrow {
+    font-size: 5.5vi;
+    margin-top: -3.5vi;
+  }
+
+  #tag-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0rem;
+    margin-left: 0rem;
+    position: absolute;
+    bottom: 79vh;
+    justify-self: center;
+  }
+
+  .case-study-header {
+    scale: 1.30; 
+    margin-top: 50px;
+    margin-right: 3%;
+  }
+
+  .year-section {
+    /* margin-top: -200px;  */
+    padding-top: 110px;
   }
   
 }

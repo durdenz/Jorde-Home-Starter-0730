@@ -8,6 +8,13 @@ import { loadCurveFromJSON } from '../js/curveTools/CurveMethods.js'
 import { setupRenderer } from '../js/helpers/RendererHelper.js'
 import {IsMobile, IsTablet} from '../js/mobileCheck.js';
 
+
+//G5 added 7/15 for unreal bloom pass on spline path
+import { EffectComposer } from "jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "jsm/postprocessing/UnrealBloomPass.js";
+
+
 // G4 062925 Integrated
 // Force Window to reset to position (0,0) on reload
 window.addEventListener('load', (event) => {
@@ -152,8 +159,8 @@ sections.forEach((section) => {
   gsap.from(section, {
     scrollTrigger: {
       trigger: section,
-      start: 'bottom 90%',
-      end: 'bottom 85%',
+      start: '10% 90%',
+      end: 'top 90%',
       scrub: false,
       markers: false,
       toggleActions: 'play play reverse reverse'
@@ -284,7 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
       start: "7% 10%", // when the top of the trigger hits the top of the viewport
       end: "10% 0%", // bottom of the trigger hits the bottom of the vp
       scrub: true,
-      markers: true,
+      markers: false,
       toggleActions: 'play play reverse reverse'
     },
   })
@@ -293,90 +300,117 @@ document.addEventListener("DOMContentLoaded", () => {
 // Spline Path Follow Code Starts Here
 
 // G4 062925 Use new models for animation
-const startingModelPath = '../models/3DScene_TEST1.glb' // G4 062925 Added for Animation
-const curvePathJSON = '../models/SplinePath_TEST1.json' // G4 062925 Added for Animation
+const startingModelPath = '../models/WireFrame_Rotate_Test.glb'; // G4 062925 Added for Animation
+const curvePathJSON = '../models/StraightSpline2.json'; // G4 062925 Added for Animation
 
 setupScene();
 
 async function setupScene() {
-
-	//Scene is container for objects, cameras, and lights
 	const scene = new THREE.Scene();
 
-  await LoadGLBByPath(scene, startingModelPath); // G4 062925 Integrate Animtion
-	let mixer = getMixer(); // G4 062925 Integrate Animtion
+	await LoadGLBByPath(scene, startingModelPath); // G4 062925 Integrate Animation
+	let mixer = getMixer(); // G4 062925 Integrate Animation
 
 	let curvePath = await loadCurveFromJSON(scene, curvePathJSON);
 
-	// Comment to remove curve visualization
-	// scene.add(curvePath.mesh); 
-	
-	// Create a camera and set its position and orientation
-	const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-	// camera.position.set(6, 3, 10);
-	camera.position.copy(curvePath.curve.getPointAt(0))
-	camera.lookAt(curvePath.curve.getPointAt(1.0))
+	// Optional: scene.add(curvePath.mesh);
 
-	// Add the camera to the scene
+	const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+	camera.position.copy(curvePath.curve.getPointAt(0));
+	camera.lookAt(curvePath.curve.getPointAt(1.0));
 	scene.add(camera);
+
 	const renderer = setupRenderer();
+
+	// === Unreal Bloom Pass Setup ===
+	const composer = new EffectComposer(renderer);
+	const renderPass = new RenderPass(scene, camera);
+	composer.addPass(renderPass);
+
+	const bloomParams = {
+		exposure: 0,
+		bloomStrength: 0.5,
+		bloomThreshold: 0,
+		bloomRadius: 1
+	};
+
+	const bloomPass = new UnrealBloomPass(
+		new THREE.Vector2(window.innerWidth, window.innerHeight),
+		bloomParams.bloomStrength,
+		bloomParams.bloomRadius,
+		bloomParams.bloomThreshold
+	);
+	composer.addPass(bloomPass);
+	// ===============================
 
 	let positionAlongPathState = new PositionAlongPathState();
 
-  // G4 062925 Integrated Code to isolate scroll thru scene to when top of canvas reaches top of viewport
-
-  // Setup Event Listener for Scrolling inside canvas
+	// G4 062925 Integrated Code to isolate scroll thru scene to when top of canvas reaches top of viewport
 	let SplineCanvas = document.querySelector('#spline-path-canvas');
+  
+  // Support both desktop and mobile scroll
+  window.addEventListener('wheel', onUserScroll, { passive: true });
+  window.addEventListener('touchmove', onUserScroll, { passive: true });
 
-	window.addEventListener('wheel', onMouseScroll, false);
 
-	function onMouseScroll(event){
-		if(SplineCanvas.getBoundingClientRect().top <= 0) {
-			console.log(`MouseScroll: SplineCanvas.top = ${SplineCanvas.getBoundingClientRect().top}`);
-			handleScroll(event, positionAlongPathState);
-		}
-	}
-  // G4 062925 End of Changes
+  function onUserScroll(event) {
+    const SplineCanvasTop = SplineCanvas.getBoundingClientRect().top;
+    if (SplineCanvasTop <= 0) {
+      console.log(`Scroll Triggered: SplineCanvas.top = ${SplineCanvasTop}`);
+  
+      // Simulate scroll delta for touchmove (if needed)
+      let delta = 0;
+  
+      if (event.type === 'wheel') {
+        delta = event.deltaY;
+      } else if (event.type === 'touchmove') {
+        // Store previous touch Y
+        if (typeof onUserScroll.lastTouchY !== 'number') {
+          onUserScroll.lastTouchY = event.touches[0].clientY;
+          return;
+        }
+        const currentY = event.touches[0].clientY;
+        delta = onUserScroll.lastTouchY - currentY;
+        onUserScroll.lastTouchY = currentY;
+      }
+  
+      // Simulate a synthetic event with a deltaY
+      handleScroll({ deltaY: delta }, positionAlongPathState);
+    }
+  }
+  
 
-  // 062925 - G4 Beginning of Changes for Animation
+	// G4 062925 End of Changes
+
+	// G4 Beginning of Changes for Animation
 	const clock = new THREE.Clock();
-	// 062925 - G4 End of Changes for Animation
+	// G4 End of Changes for Animation
 
 	// Animate the scene
 	function animate() {
 		requestAnimationFrame(animate);
 		updatePosition(curvePath, camera, positionAlongPathState);
-    // 062925 - G4 Beginning of Changes for Animation
-		if(mixer) {
-        	mixer.update(clock.getDelta());
+
+		if (mixer) {
+			mixer.update(clock.getDelta());
 		}
-		// 062925 - G4 End of Changes for Animation
-		renderer.render(scene, camera);
+
+		// Use composer instead of renderer
+		composer.render();
 	}
 	animate();
 
-  // 062925 - G4 Beginning of Changes for Animation
-	// renderer.setAnimationLoop(animate);
-  // 062925 - G4 End of Changes for Animation
-
-
-// Spline Path Follow Code Ends Here
-// ==============================================
-
-
-  // GD5 Added handleWindowResize and Event Listener 053125 
-  //
-  
-  function handleWindowResize () {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    console.log("Window Resize "+window.innerWidth+" x "+window.innerHeight);
-  }
-  window.addEventListener('resize', handleWindowResize, false);
-
-
+	// GD5 Added handleWindowResize and Event Listener 053125 
+	function handleWindowResize() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		composer.setSize(window.innerWidth, window.innerHeight); // resize composer too
+		console.log("Window Resize " + window.innerWidth + " x " + window.innerHeight);
+	}
+	window.addEventListener('resize', handleWindowResize, false);
 };
+
 
 
 // // Lottie Animation Arrow
@@ -714,9 +748,9 @@ document.querySelectorAll('.cs-animate-text').forEach((panel) => {
     scrollTrigger: {
       trigger: panel,
       start: 'top 90%',
-      end: 'top 85%',
+      end: 'top 90%',
       scrub: false,
-      markers: false,
+      markers: true,
       toggleActions: 'play play reverse reverse'
     }
   });
